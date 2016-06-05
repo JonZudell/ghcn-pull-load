@@ -6,7 +6,9 @@ import time
 queries = {'META.STATES' : '''INSERT INTO "META"."STATES" ("CODE", "NAME") VALUES (%(CODE)s, %(NAME)s) ON CONFLICT DO NOTHING''',
            'META.COUNTRIES' : '''INSERT INTO "META"."COUNTRIES" ("CODE", "NAME") VALUES (%(CODE)s, %(NAME)s) ON CONFLICT DO NOTHING''',
            'META.STATIONS' : '''INSERT INTO "META"."STATIONS" ("ID", "LATITUDE", "LONGITUDE", "ELEVATION", "STATE", "NAME", "GSN_FLAG","HCN_CRN_FLAG", "WMO_ID") 
-                                                     VALUES (%(ID)s, %(LATITUDE)s, %(LONGITUDE)s, %(ELEVATION)s, %(STATE)s, %(NAME)s, %(GSN_FLAG)s,%(HCN_CRN_FLAG)s, %(WMO_ID)s) ON CONFLICT DO NOTHING'''}
+                                VALUES (%(ID)s, %(LATITUDE)s, %(LONGITUDE)s, %(ELEVATION)s, %(STATE)s, %(NAME)s, %(GSN_FLAG)s,%(HCN_CRN_FLAG)s, %(WMO_ID)s) ON CONFLICT DO NOTHING''',
+           'META.INVENTORY' : '''INSERT INTO "META"."INVENTORY" ("ID", "LATITUDE", "LONGITUDE", "ELEMENT", "FIRSTYEAR", "LASTYEAR")
+                                 VALUES (%(ID)s, %(LATITUDE)s, %(LONGITUDE)s, %(ELEMENT)s, %(FIRSTYEAR)s, %(LASTYEAR)s) ON CONFLICT DO NOTHING'''}
 
 def format_by_key(line, keys):
     result = {}
@@ -14,6 +16,8 @@ def format_by_key(line, keys):
         result[key['COLUMN_NAME']] = line[key['START']:key['END']].strip()
         if key['TYPE'] == 'real':
             result[key['COLUMN_NAME']] = float(result[key['COLUMN_NAME']])
+        elif key['TYPE'] == 'int':
+            result[key['COLUMN_NAME']] = int(result[key['COLUMN_NAME']])
     return result
 
 def insert(result, table, cursor):
@@ -61,9 +65,14 @@ if __name__ == '__main__':
 
     inventory_load = {'TABLE' : 'META.INVENTORY',
                       'LOCATION' : os.environ['DATA_DROP'] + '/' + 'ghcnd-inventory.txt',
-                      'KEYS' : [{'COLUMN_NAME' : 'ID', 'START' : 0, 'END' : 11, 'TYPE' : 'str'}]}
+                      'KEYS' : [{'COLUMN_NAME' : 'ID', 'START' : 0, 'END' : 11, 'TYPE' : 'str'},
+                                {'COLUMN_NAME' : 'LATITUDE', 'START' : 12, 'END' : 20, 'TYPE' : 'real'},
+                                {'COLUMN_NAME' : 'LONGITUDE', 'START' : 21, 'END' : 30, 'TYPE' : 'real'},
+                                {'COLUMN_NAME' : 'ELEMENT', 'START' : 31, 'END' : 35, 'TYPE' : 'str'},
+                                {'COLUMN_NAME' : 'FIRSTYEAR', 'START' : 36, 'END' : 40, 'TYPE' : 'int'},
+                                {'COLUMN_NAME' : 'LASTYEAR', 'START' : 41, 'END' : 455555, 'TYPE' : 'int'}]}
                                                                   
-    loads = [states_load,countries_load,station_load]
+    loads = [states_load,countries_load,station_load,inventory_load]
     total = 0
     for item in loads:
         print 'STARTING LOAD FOR {0}'.format(item['TABLE'])
