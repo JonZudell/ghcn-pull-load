@@ -19,8 +19,8 @@ def pull(url, target, file_names, drop_location):
 
 if __name__ == '__main__':
     url = os.environ['DATA_TARGET']
-    drop_location = os.environ['DATA_DROP'] + '/meta/'
+    drop_location = os.environ['DATA_DROP'] + '/daily/'
     target = 'pub/data/ghcn/daily'
-    file_names = ['ghcnd-states.txt','ghcnd-stations.txt', 'ghcnd-countries.txt','ghcnd-inventory.txt']
+    file_names = ['ghcnd_all.tar.gz']
     print 'Pulling {0} files from {1}/{2} and pushing to {3}'.format(len(file_names),url,target,drop_location)
     pull(url ,target, file_names, drop_location)
