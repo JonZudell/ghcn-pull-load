@@ -41,18 +41,19 @@ def load(item):
 
 if __name__ == '__main__':
     print 'BEGINNING META LOAD PROCEDURE'
+    meta_location = os.environ['DATA_DROP'] + '/meta/'
     states_load = {'TABLE' : 'META.STATES',
-                   'LOCATION' : os.environ['DATA_DROP'] + '/' + 'ghcnd-states.txt',
+                   'LOCATION' : meta_location + 'ghcnd-states.txt',
                    'KEYS' : [{'COLUMN_NAME' : 'CODE', 'START' : 0, 'END' : 2, 'TYPE' : 'str'},
                              {'COLUMN_NAME' : 'NAME', 'START' : 3, 'END' : 50, 'TYPE' : 'str'}]}
     
     countries_load = {'TABLE' : 'META.COUNTRIES', 
-                      'LOCATION' : os.environ['DATA_DROP'] + '/' + 'ghcnd-countries.txt',
+                      'LOCATION' : meta_location + 'ghcnd-countries.txt',
                       'KEYS' : [{'COLUMN_NAME' : 'CODE', 'START' : 0, 'END' : 2, 'TYPE' : 'str'},
                                 {'COLUMN_NAME' : 'NAME', 'START' : 3, 'END' : 50, 'TYPE' : 'str'}]}
                                 
     station_load = {'TABLE' : 'META.STATIONS',
-                    'LOCATION' : os.environ['DATA_DROP'] + '/' + 'ghcnd-stations.txt',
+                    'LOCATION' : meta_location + 'ghcnd-stations.txt',
                     'KEYS' : [{'COLUMN_NAME' : 'ID', 'START' : 0, 'END' : 11, 'TYPE' : 'str'},
                               {'COLUMN_NAME' : 'LATITUDE', 'START' : 12, 'END' : 20, 'TYPE' : 'real'},
                               {'COLUMN_NAME' : 'LONGITUDE', 'START' : 21, 'END' : 30, 'TYPE' : 'real'},
@@ -64,7 +65,7 @@ if __name__ == '__main__':
                               {'COLUMN_NAME' : 'WMO_ID', 'START' : 80, 'END' : 85, 'TYPE' : 'str'}]}
 
     inventory_load = {'TABLE' : 'META.INVENTORY',
-                      'LOCATION' : os.environ['DATA_DROP'] + '/' + 'ghcnd-inventory.txt',
+                      'LOCATION' : meta_location + 'ghcnd-inventory.txt',
                       'KEYS' : [{'COLUMN_NAME' : 'ID', 'START' : 0, 'END' : 11, 'TYPE' : 'str'},
                                 {'COLUMN_NAME' : 'LATITUDE', 'START' : 12, 'END' : 20, 'TYPE' : 'real'},
                                 {'COLUMN_NAME' : 'LONGITUDE', 'START' : 21, 'END' : 30, 'TYPE' : 'real'},
