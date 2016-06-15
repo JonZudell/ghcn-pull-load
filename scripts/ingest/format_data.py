@@ -5,16 +5,16 @@ import time
 import gzip
 import sys
 
-
+#POTENTIALLY OPTIMIZE
 def format_by_key(line, accepted_elements):
     variables = line.split(',')
     result = {}
     result['ID']      = variables[0]
-    result['YEAR']    = int(variables[1][0:4])
-    result['MONTH']   = int(variables[1][4:6])
-    result['DAY']     = int(variables[1][6:8])
+    result['YEAR']    = int(variables[1][0:4]) if variables[1][0:4] != '' else ''
+    result['MONTH']   = int(variables[1][4:6]) if variables[1][4:6] != '' else ''
+    result['DAY']     = int(variables[1][6:8]) if variables[1][6:8] != '' else ''
     result['ELEMENT'] = variables[2]
-    result['VALUE']   = float(variables[3])
+    result['VALUE']   = float(variables[3]) if variables[3] != '' else ''
     
     result['M_FLAG']  = variables[4]
     result['Q_FLAG']  = variables[5]
@@ -57,29 +57,38 @@ def get_accepted_elements():
     conn.close()
     return result
 
-def load(given_file, target_file):
+#BATCH WRITE FORMATTED LINES
+def format(given_file, target_file, accepted_elements):
     result = []
-    accepted_elements = get_accepted_elements()
+    
     with gzip.open(given_file, 'r') as this_file, open(target_file, 'w+') as output_file:
         for line in this_file:
             formatted_line = format_by_key(line, accepted_elements)
             if formatted_line is not None:
-                output_file.write(create_csv_line(formatted_line))
+                result.append(create_csv_line(formatted_line))
+                if len(result) > 9999:
+                    output_file.write(result)
+                    result = []
+        if len(result) > 0:
+            output_file.write(''.join(result))
 
-
+def run(start,end):
+    input_dir = os.environ['DATA_DROP'] + '/yearly/unformatted/'
+    target = os.environ['DATA_DROP'] + '/yearly/formatted/'
+    files = [ f for f in os.listdir(input_dir) if start < int(f.split('.')[0]) <= end ]
+    accepted_elements = get_accepted_elements()
+    print 'BEGINNING FORMAT GHCN DATA PROCEDURE'
+    total = 0
+    for item in files:
+        print 'STARTING FORMAT FOR {0}'.format(item)
+        start = time.time()
+        format(input_dir + item, target + '.'.join(item.split('.')[0:2]), accepted_elements)
+        end = time.time() - start
+        total += time.time() - start
+        print 'ENDING FORMAT FOR {0} COMPLETED IN {1} TIME'.format(item, end)
+    print 'ALL FORMATS FINISHED IN {0} TIME'.format(total)
+	
 if __name__ == '__main__':
     start = int(sys.argv[1])
     end = int(sys.argv[2])
-    input_dir = os.environ['DATA_DROP'] + '/yearly/unformatted/'
-    target = os.environ['DATA_DROP'] + '/yearly/formatted/'
-    files = [ f for f in os.listdir(input_dir) if start < int(f.split('.')[0]) <= end ] 
-    print 'BEGINNING META LOAD PROCEDURE'
-    total = 0
-    for item in files:
-        print 'STARTING LOAD FOR {0}'.format(item)
-        start = time.time()
-        load(input_dir + item, target + '.'.join(item.split('.')[0:2]))
-        end = time.time() - start
-        total += time.time() - start
-        print 'ENDING LOAD FOR {0} COMPLETED IN {1} TIME'.format(item, end)
-    print 'ALL LOADS FINISHED IN {0} TIME'.format(total)
+	run(start,end)

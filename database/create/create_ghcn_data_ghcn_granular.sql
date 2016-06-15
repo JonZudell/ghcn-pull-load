@@ -14,8 +14,7 @@ CREATE TABLE "GHCN_DATA"."GHCN_GRANULAR"
   "VALUE" real NOT NULL, -- VALUE is the value of the observation
   "M_FLAG" character, --M_FLAG is the Measurement Flag
   "Q_FLAG" character, --Q_FLAG is the Quality Flag
-  "S_FLAG" character, --S_FLAG is the Source Flag
-  CONSTRAINT "GHCN_GRANULAR_PRIMARY_KEY" PRIMARY KEY ("ID", "YEAR", "MONTH", "DAY", "ELEMENT", "VALUE")
+  "S_FLAG" character --S_FLAG is the Source Flag
 )
 WITH (
   OIDS=FALSE

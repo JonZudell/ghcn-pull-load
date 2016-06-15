@@ -1,8 +1,7 @@
 CREATE TABLE "META"."STATES"
 (
    "CODE" character varying(2) NOT NULL, 
-   "NAME" character varying(50) NOT NULL, 
-   CONSTRAINT "STATES_PRIMARY_KEY" PRIMARY KEY ("CODE", "NAME")
+   "NAME" character varying(50) NOT NULL
 ) 
 WITH (
   OIDS = FALSE

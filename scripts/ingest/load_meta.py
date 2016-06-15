@@ -24,22 +24,14 @@ def insert(result, table, cursor):
     query = queries[table]
     cursor.executemany(query,result)
     
-def load(item):
-    conn = psycopg2.connect("host='{0}' dbname='{1}' user='{2}' password='{3}'".format(os.environ['INGEST_HOST'],
-                                                                                      os.environ['INGEST_DB'],
-                                                                                      os.environ['INGEST_USER'],
-                                                                                      os.environ['INGEST_PASS']))
-
-    cursor = conn.cursor()
+def load(item,cur):
     result = []
     with open(item['LOCATION'], 'r') as  given_file:
         for line in given_file:
             result.append(format_by_key(line, item['KEYS']))
-    insert(result, item['TABLE'], cursor)
-    conn.commit()
-    cursor.close()
-
-if __name__ == '__main__':
+    insert(result, item['TABLE'], cur)
+	
+def run(cur):
     print 'BEGINNING META LOAD PROCEDURE'
     meta_location = os.environ['DATA_DROP'] + '/meta/'
     states_load = {'TABLE' : 'META.STATES',
@@ -78,8 +70,17 @@ if __name__ == '__main__':
     for item in loads:
         print 'STARTING LOAD FOR {0}'.format(item['TABLE'])
         start = time.time()
-        load(item)
+        load(item, cur)
         end = time.time() - start
         total += time.time() - start
         print 'ENDING LOAD FOR {0} COMPLETED IN {1} TIME'.format(item['TABLE'], end)
     print 'ALL LOADS FINISHED IN {0} TIME'.format(total)
+
+if __name__ == '__main__':
+    conn = psycopg2.connect("host='{0}' dbname='{1}' user='{2}' password='{3}'".format(os.environ['INGEST_HOST'],
+                                                                                      os.environ['INGEST_DB'],
+                                                                                      os.environ['INGEST_USER'],
+                                                                                      os.environ['INGEST_PASS']))
+
+    cur = conn.cursor()
+    run(cur)
