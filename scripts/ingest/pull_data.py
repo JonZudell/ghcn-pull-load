@@ -24,7 +24,7 @@ def pull(url, target, drop_location):
 	
 def run():
     url = os.environ['DATA_TARGET']
-    drop_location = os.environ['DATA_DROP'] + '/yearly/formatted/'
+    drop_location = os.environ['DATA_DROP'] + '/yearly/unformatted/'
     target = 'pub/data/ghcn/daily/by_year/'
     print 'Pulling yearly files from {0}/{1} and pushing to {2}'.format(url,target,drop_location)
     pull(url ,target, drop_location)

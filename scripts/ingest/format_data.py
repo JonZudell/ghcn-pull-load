@@ -67,7 +67,7 @@ def format(given_file, target_file, accepted_elements):
             if formatted_line is not None:
                 result.append(create_csv_line(formatted_line))
                 if len(result) > 9999:
-                    output_file.write(result)
+                    output_file.write(''.join(result))
                     result = []
         if len(result) > 0:
             output_file.write(''.join(result))
@@ -91,4 +91,4 @@ def run(start,end):
 if __name__ == '__main__':
     start = int(sys.argv[1])
     end = int(sys.argv[2])
-	run(start,end)
+    run(start,end)
