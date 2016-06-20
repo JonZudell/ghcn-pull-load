@@ -62,7 +62,7 @@ def format(given_file, target_file, accepted_elements):
     result = []
     
     with gzip.open(given_file, 'r') as this_file, open(target_file, 'w+') as output_file:
-        for line in this_file:
+        for line in this_file.readlines():
             formatted_line = format_by_key(line, accepted_elements)
             if formatted_line is not None:
                 result.append(create_csv_line(formatted_line))
@@ -71,6 +71,7 @@ def format(given_file, target_file, accepted_elements):
                     result = []
         if len(result) > 0:
             output_file.write(''.join(result))
+    os.remove(given_file)
 
 def run(start,end):
     input_dir = os.environ['DATA_DROP'] + '/yearly/unformatted/'

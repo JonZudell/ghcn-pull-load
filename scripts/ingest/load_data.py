@@ -23,6 +23,7 @@ def run(start,end,conn):
         load_file(files_dir + loadable,cur, cols)
         end = time.time() - start
         total += end
+        os.remove(files_dir + loadable)
         print 'FINISHED LOAD FOR {0} in {1}'.format(loadable, end)
         conn.commit()
     cur.close()
