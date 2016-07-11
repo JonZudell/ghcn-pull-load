@@ -35,7 +35,7 @@ def format_by_key(line, accepted_elements, wmo_stations):
         return None
 
 def create_csv_line(line):
-    ordered_keys = ['ID','YEAR','MONTH','DAY','HOUR','MINUTE','VALUE','M_FLAG','Q_FLAG','S_FLAG']
+    ordered_keys = ['ID','YEAR','MONTH','DAY','HOUR','MINUTE','ELEMENT','VALUE','M_FLAG','Q_FLAG','S_FLAG']
     result = ''
     for key in ordered_keys:
         result += str(line[key])
@@ -56,6 +56,9 @@ def get_accepted_elements(cursor):
     cursor.execute('SELECT "ELEMENT" FROM "META"."ELEMENTS_DEFINITION"')
     result = cursor.fetchall()
     result = [ item[0] for item in result ]
+    result.extend(['WT01','WT02','WT03','WT04','WT05','WT06','WT07','WT08','WT09','WT10',
+                   'WT11','WT12','WT13','WT14','WT15','WT16','WT17','WT18','WT19','WT20',
+                   'WT21','WT22'])
     return set(result)
 
 def yield_lines(given_file):
@@ -81,18 +84,7 @@ def format_files(given_file, target_file, accepted_elements, wmo_stations):
             for line in lists_by_element[key]:
                 output_file.write(line)
             
-            
-    #with open(target_file, 'w+') as output_file:
-        #for line in yield_lines(given_file):
-            #formatted_line = format_by_key(line, accepted_elements, wmo_stations)
-            #if formatted_line is not None:
-                #result.append(create_csv_line(formatted_line))
-                #if len(result) > 9999:
-                    #output_file.write(''.join(result))
-                    #result = []
-        #if len(result) > 0:
-            #output_file.write(''.join(result))
-    #os.remove(given_file)
+    os.remove(given_file)
 
 def run(start, end, conn):
     input_dir = os.environ['DATA_DROP'] + '/yearly/unformatted/'

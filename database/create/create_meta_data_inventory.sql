@@ -8,7 +8,8 @@ CREATE TABLE "META"."INVENTORY"
   "LONGITUDE" real, -- LONGITUDE is the longitude of the station (in decimal degrees).
   "ELEMENT" character varying(4), -- ELEMENT is the element type.  See section III for a definition of elements.
   "FIRSTYEAR" integer,
-  "LASTYEAR" integer
+  "LASTYEAR" integer,
+  CONSTRAINT "INVENTORY_PRIMARY_KEY" PRIMARY KEY("ID","ELEMENT")
 )
 WITH (
   OIDS=FALSE

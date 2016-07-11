@@ -8,7 +8,8 @@ CREATE TABLE "META"."STATIONS"
    "NAME" character varying(30), 
    "GSN_FLAG" character varying(3), 
    "HCN_CRN_FLAG" character varying(3), 
-   "WMO_ID" character varying(5)
+   "WMO_ID" character varying(5),
+   CONSTRAINT "STATIONS_PRIMARY_KEY" PRIMARY KEY("ID")
 ) 
 WITH (
   OIDS = FALSE
