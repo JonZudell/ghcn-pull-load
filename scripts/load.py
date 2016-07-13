@@ -37,8 +37,8 @@ if __name__ == '__main__':
                                                                                        os.environ['INGEST_USER'],
                                                                                        os.environ['INGEST_PASS']))
     cur = conn.cursor()
-    create_tables('/home/dev/ghcn/database/create',conn)
-    load_elements_definition('/home/dev/ghcn/database/load',cur)
+    create_tables('~/ghcn-pull-load/database/create',conn)
+    load_elements_definition('~/ghcn-pull-load/database/load',cur)
     conn.commit()
     ingest.pull_meta.run()
     ingest.load_meta.run(cur)
