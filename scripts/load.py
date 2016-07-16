@@ -6,11 +6,12 @@ import ingest.load_meta
 import ingest.pull_data
 import ingest.load_data
 import ingest.format_data
+import ingest.generate_summaries
 import time
 #CREATE TABLES
 def create_tables(files_location,conn):
     cur = conn.cursor()
-    scripts = ['create_ghcn_data.sql', 'create_ghcn_data_ghcn_base.sql',
+    scripts = ['create_ghcn_data.sql', 'create_ghcn_data_ghcn_base.sql','create_ghcn_data_ghcn_summary.sql',
                'create_ghcn_data_ghcn_tmax.sql', 'create_ghcn_data_ghcn_tmin.sql',
                'create_ghcn_data_ghcn_awdr.sql','create_ghcn_data_ghcn_prcp.sql',
                'create_ghcn_data_ghcn_awnd.sql','create_ghcn_data_ghcn_tavg.sql',
@@ -47,5 +48,6 @@ if __name__ == '__main__':
     ingest.pull_data.run()
     ingest.format_data.run(-9999, 9999, conn)
     ingest.load_data.run(-9999, 9999, conn)
+    ingest.generate_summaries.run(conn)
     conn.commit()
     conn.close()
